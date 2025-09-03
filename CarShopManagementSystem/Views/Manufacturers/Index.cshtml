@@ -1,0 +1,141 @@
+﻿@model IEnumerable<CarShopManagementSystem.Models.Manufacturer>
+
+@{
+    ViewData["Title"] = "قائمة الشركات";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">🏭 @ViewData["Title"]</h2>
+        <a class="btn btn-primary" href="@Url.Action("Create")">➕ إضافة شركة جديدة</a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>الشعار</th>
+                        <th>الاسم</th>
+                        <th>الماركات الفرعية</th>
+                        <th style="width: 200px;">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var m in Model)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(m.LogoPath))
+                                {
+                                    <img src="@m.LogoPath" alt="Logo" style="height:50px;" />
+                                }
+                                else
+                                {
+                                    <span class="text-muted">لا يوجد شعار</span>
+                                }
+                            </td>
+                            <td><strong>@m.Name</strong></td>
+                            <td>
+                                @if (m.SubBrands != null && m.SubBrands.Any())
+                                {
+                                    <ul class="mb-0 ps-3">
+                                        @foreach (var sub in m.SubBrands)
+                                        {
+                                            <li>@sub.Name</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">لا يوجد ماركات فرعية</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a class="btn btn-sm btn-outline-secondary" href="@Url.Action("Edit", new { id = m.Id })">✏️ تعديل</a>
+                                    <form method="post" asp-action="Delete" asp-route-id="@m.Id"
+                                          onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">🗑️ حذف</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@* @model IEnumerable<CarShopManagementSystem.Models.Manufacturer>
+
+@{
+    ViewData["Title"] = "قائمة الشركات";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">🏭 @ViewData["Title"]</h2>
+        <a class="btn btn-primary" href="@Url.Action("Create")">➕ إضافة شركة</a>
+    </div>
+
+    <div class="card shadow">
+        <div class="card-body">
+            <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>الشعار</th>
+                        <th>الاسم</th>
+                        <th>الماركات الفرعية</th>
+                        <th style="width: 200px;">الإجراءات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var m in Model)
+                    {
+                        <tr>
+                            <td>
+                                @if (!string.IsNullOrEmpty(m.LogoPath))
+                                {
+                                    <img src="@m.LogoPath" alt="Logo" style="height:50px;" />
+                                }
+                                else
+                                {
+                                    <span class="text-muted">لا يوجد شعار</span>
+                                }
+                            </td>
+                            <td><strong>@m.Name</strong></td>
+                            <td>
+                                @if (m.SubBrands != null && m.SubBrands.Any())
+                                {
+                                    <ul class="mb-0 ps-3">
+                                        @foreach (var sub in m.SubBrands)
+                                        {
+                                            <li>@sub.Name</li>
+                                        }
+                                    </ul>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">لا يوجد ماركات فرعية</span>
+                                }
+                            </td>
+                            <td>
+                                <div class="d-flex gap-2">
+                                    <a class="btn btn-sm btn-outline-secondary" href="@Url.Action("Edit", new { id = m.Id })">✏️ تعديل</a>
+                                    <form method="post" asp-action="Delete" asp-route-id="@m.Id"
+                                          onsubmit="return confirm('هل أنت متأكد من الحذف؟');">
+                                        <button type="submit" class="btn btn-sm btn-outline-danger">🗑️ حذف</button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+ *@

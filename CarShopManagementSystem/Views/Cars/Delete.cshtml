@@ -1,0 +1,149 @@
+@model CarShopManagementSystem.Models.Car
+
+@{
+    ViewData["Title"] = "حذف السيارة";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-danger">
+        <div class="card-header bg-danger text-white">
+            <h1 class="h3 mb-0">تأكيد الحذف</h1>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle-fill"></i> هل أنت متأكد من رغبتك في حذف هذه السيارة؟ هذا الإجراء لا يمكن التراجع عنه.
+            </div>
+
+            <div class="row mt-4">
+                <!-- صورة السيارة -->
+                <div class="col-md-4">
+                    <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/images/cars/default-car.jpg" : Model.ImageUrl)" class="img-fluid rounded" alt="@Model.Manufacturer?.Name @Model.Model">
+                </div>
+
+                <!-- تفاصيل السيارة -->
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="@(Model.Manufacturer?.LogoPath != null ? "/" + Model.Manufacturer.LogoPath : "/logos/no-logo.png")" alt="Logo" style="height:50px; margin-right:10px;" />
+                        <h2 class="mb-0">
+                            @Model.Manufacturer?.Name
+                            @if (Model.SubBrand != null)
+                            {
+                                <span>@Model.SubBrand.Name</span>
+                            }
+                            @Model.Model @Model.Year
+                        </h2>
+                    </div>
+
+                    <dl class="row">
+                        <dt class="col-sm-4">الماركة</dt>
+                        <dd class="col-sm-8">@Model.Manufacturer?.Name</dd>
+
+                        @if (Model.SubBrand != null)
+                        {
+                            <dt class="col-sm-4">الفئة / الموديل الفرعي</dt>
+                            <dd class="col-sm-8">@Model.SubBrand.Name</dd>
+                        }
+
+                        <dt class="col-sm-4">الموديل</dt>
+                        <dd class="col-sm-8">@Model.Model</dd>
+
+                        <dt class="col-sm-4">سنة الصنع</dt>
+                        <dd class="col-sm-8">@Model.Year</dd>
+
+                        <dt class="col-sm-4">اللون</dt>
+                        <dd class="col-sm-8">@Model.Color</dd>
+
+                        <dt class="col-sm-4">السعر</dt>
+                        <dd class="col-sm-8">@Model.EstimatedPriceMax.ToString("C0")</dd>
+
+                        <dt class="col-sm-4">الحالة</dt>
+                        <dd class="col-sm-8">@((Model.IsUsed) ? "مستعملة" : "جديدة")</dd>
+
+                        @if (Model.IsUsed && Model.Mileage.HasValue)
+                        {
+                            <dt class="col-sm-4">المسافة المقطوعة</dt>
+                            <dd class="col-sm-8">@Model.Mileage كم</dd>
+                        }
+
+                        <dt class="col-sm-4">التوفر</dt>
+                        <dd class="col-sm-8">@((Model.IsAvailable) ? "متاحة" : "محجوزة")</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- أزرار العودة والحذف -->
+            <form asp-action="Delete" method="post" class="mt-4">
+                <input type="hidden" asp-for="Id" />
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> العودة للقائمة</a>
+                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> تأكيد الحذف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@* @model CarShopManagementSystem.Models.Car
+
+@{
+    ViewData["Title"] = "حذف السيارة";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-danger">
+        <div class="card-header bg-danger text-white">
+            <h1 class="h3 mb-0">تأكيد الحذف</h1>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle-fill"></i> هل أنت متأكد من رغبتك في حذف هذه السيارة؟ هذا الإجراء لا يمكن التراجع عنه.
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/images/cars/default-car.jpg" : Model.ImageUrl)" class="img-fluid rounded" alt="@Model.Manufacturer @Model.Model">
+                </div>
+                <div class="col-md-8">
+                    <h2>@Model.Manufacturer @Model.Model @Model.Year</h2>
+                    <dl class="row">
+                        <dt class="col-sm-3">الماركة</dt>
+                        <dd class="col-sm-9">@Model.Manufacturer</dd>
+                        
+                        <dt class="col-sm-3">الموديل</dt>
+                        <dd class="col-sm-9">@Model.Model</dd>
+                        
+                        <dt class="col-sm-3">سنة الصنع</dt>
+                        <dd class="col-sm-9">@Model.Year</dd>
+                        
+                        <dt class="col-sm-3">اللون</dt>
+                        <dd class="col-sm-9">@Model.Color</dd>
+                        
+                        <dt class="col-sm-3">السعر</dt>
+                        <dd class="col-sm-9">@Model.EstimatedPriceMax.ToString("C0")</dd>
+                        
+                        <dt class="col-sm-3">الحالة</dt>
+                        <dd class="col-sm-9">@(Model.IsUsed ? "مستعملة" : "جديدة")</dd>
+                        
+                        @if (Model.IsUsed && Model.Mileage.HasValue)
+                        {
+                            <dt class="col-sm-3">المسافة المقطوعة</dt>
+                            <dd class="col-sm-9">@Model.Mileage كم</dd>
+                        }
+                        
+                        <dt class="col-sm-3">التوفر</dt>
+                        <dd class="col-sm-9">@(Model.IsAvailable ? "متاحة" : "محجوزة")</dd>
+                    </dl>
+                </div>
+            </div>
+            
+            <form asp-action="Delete" method="post" class="mt-4">
+                <input type="hidden" asp-for="Id" />
+                <div class="d-flex justify-content-between">
+                    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> العودة للقائمة</a>
+                    <button type="submit" class="btn btn-danger"><i class="bi bi-trash"></i> تأكيد الحذف</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> *@

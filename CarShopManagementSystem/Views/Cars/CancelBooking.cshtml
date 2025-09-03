@@ -1,0 +1,164 @@
+@model CarShopManagementSystem.Models.Booking
+
+@{
+    ViewData["Title"] = "إلغاء الحجز";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-danger">
+        <div class="card-header bg-danger text-white">
+            <h1 class="h3 mb-0">تأكيد إلغاء الحجز</h1>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle-fill"></i> هل أنت متأكد من رغبتك في إلغاء حجز هذه السيارة؟
+            </div>
+
+            <div class="row mt-4">
+                <!-- صورة السيارة -->
+                <div class="col-md-4">
+                    <img src="@(string.IsNullOrEmpty(Model.Car.ImageUrl) ? "/images/cars/default-car.jpg" : Model.Car.ImageUrl)" class="img-fluid rounded" alt="@Model.Car.Manufacturer?.Name @Model.Car.Model">
+                </div>
+
+                <!-- تفاصيل السيارة -->
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="@(Model.Car.Manufacturer?.LogoPath != null ? "/" + Model.Car.Manufacturer.LogoPath : "/logos/no-logo.png")" alt="Logo" style="height:50px; margin-right:10px;" />
+                        <h2 class="mb-0">
+                            @Model.Car.Manufacturer?.Name
+                            @if (Model.Car.SubBrand != null)
+                            {
+                                <span>@Model.Car.SubBrand.Name</span>
+                            }
+                            @Model.Car.Model @Model.Car.Year
+                        </h2>
+                    </div>
+
+                    <dl class="row">
+                        <dt class="col-sm-4">الماركة</dt>
+                        <dd class="col-sm-8">@Model.Car.Manufacturer?.Name</dd>
+
+                        @if (Model.Car.SubBrand != null)
+                        {
+                            <dt class="col-sm-4">الفئة / الموديل الفرعي</dt>
+                            <dd class="col-sm-8">@Model.Car.SubBrand.Name</dd>
+                        }
+
+                        <dt class="col-sm-4">الموديل</dt>
+                        <dd class="col-sm-8">@Model.Car.Model</dd>
+
+                        <dt class="col-sm-4">سنة الصنع</dt>
+                        <dd class="col-sm-8">@Model.Car.Year</dd>
+
+                        <dt class="col-sm-4">اللون</dt>
+                        <dd class="col-sm-8">@Model.Car.Color</dd>
+
+                        <dt class="col-sm-4">السعر</dt>
+                        <dd class="col-sm-8">@Model.Car.EstimatedPriceMax.ToString("C0")</dd>
+
+                        <dt class="col-sm-4">الحالة</dt>
+                        <dd class="col-sm-8">@((Model.Car.IsUsed) ? "مستعملة" : "جديدة")</dd>
+
+                        @if (Model.Car.IsUsed && Model.Car.Mileage.HasValue)
+                        {
+                            <dt class="col-sm-4">المسافة المقطوعة</dt>
+                            <dd class="col-sm-8">@Model.Car.Mileage كم</dd>
+                        }
+
+                        <dt class="col-sm-4">تاريخ الحجز</dt>
+                        <dd class="col-sm-8">@Model.BookingDate.ToString("yyyy/MM/dd HH:mm")</dd>
+
+                        <dt class="col-sm-4">تاريخ انتهاء الحجز</dt>
+                        <dd class="col-sm-8">@Model.ExpiryDate.ToString("yyyy/MM/dd HH:mm")</dd>
+
+                        <dt class="col-sm-4">الوقت المتبقي</dt>
+                        <dd class="col-sm-8">
+                            @{
+                                var timeLeft = Model.ExpiryDate - DateTime.Now;
+                                if (timeLeft.TotalHours > 0)
+                                {
+                                    <span class="text-success">@Math.Floor(timeLeft.TotalHours) ساعة و @timeLeft.Minutes دقيقة</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger">انتهى الحجز</span>
+                                }
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- أزرار الإلغاء / العودة -->
+            <form asp-action="CancelBooking" method="post" class="mt-4">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <div class="d-flex justify-content-between">
+                    <a asp-action="MyBookings" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> العودة للحجوزات</a>
+                    <button type="submit" class="btn btn-danger"><i class="bi bi-x-circle"></i> تأكيد إلغاء الحجز</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@* @model CarShopManagementSystem.Models.Booking
+
+@{
+    ViewData["Title"] = "إلغاء الحجز";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-danger">
+        <div class="card-header bg-danger text-white">
+            <h1 class="h3 mb-0">تأكيد إلغاء الحجز</h1>
+        </div>
+        <div class="card-body">
+            <div class="alert alert-warning">
+                <i class="bi bi-exclamation-triangle-fill"></i> هل أنت متأكد من رغبتك في إلغاء حجز هذه السيارة؟
+            </div>
+            
+            <div class="row mt-4">
+                <div class="col-md-4">
+                    <img src="@(string.IsNullOrEmpty(Model.Car.ImageUrl) ? "/images/cars/default-car.jpg" : Model.Car.ImageUrl)" class="img-fluid rounded" alt="@Model.Car.Manufacturer @Model.Car.Model">
+                </div>
+                <div class="col-md-8">
+                    <h2>@Model.Car.Manufacturer @Model.Car.Model @Model.Car.Year</h2>
+                    <dl class="row">
+                        <dt class="col-sm-4">تاريخ الحجز</dt>
+                        <dd class="col-sm-8">@Model.BookingDate.ToString("yyyy/MM/dd HH:mm")</dd>
+                        
+                        <dt class="col-sm-4">تاريخ انتهاء الحجز</dt>
+                        <dd class="col-sm-8">@Model.ExpiryDate.ToString("yyyy/MM/dd HH:mm")</dd>
+                        
+                        <dt class="col-sm-4">السعر</dt>
+                        <dd class="col-sm-8">@Model.Car.EstimatedPriceMax.ToString("C0")</dd>
+                        
+                        <dt class="col-sm-4">الوقت المتبقي</dt>
+                        <dd class="col-sm-8">
+                            @{
+                                var timeLeft = Model.ExpiryDate - DateTime.Now;
+                                if (timeLeft.TotalHours > 0)
+                                {
+                                    <span class="text-success">@Math.Floor(timeLeft.TotalHours) ساعة و @timeLeft.Minutes دقيقة</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger">انتهى الحجز</span>
+                                }
+                            }
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+            
+            <form asp-action="CancelBooking" method="post" class="mt-4">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <div class="d-flex justify-content-between">
+                    <a asp-action="MyBookings" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> العودة للحجوزات</a>
+                    <button type="submit" class="btn btn-danger"><i class="bi bi-x-circle"></i> تأكيد إلغاء الحجز</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div> *@

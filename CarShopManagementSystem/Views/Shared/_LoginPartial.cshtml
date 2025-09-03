@@ -1,0 +1,26 @@
+@using CarShopManagementSystem.Models
+@using Microsoft.AspNetCore.Http
+@inject IHttpContextAccessor HttpContextAccessor
+
+<ul class="navbar-nav">
+@if (HttpContextAccessor.HttpContext.Session.GetString("UserId") != null)
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Profile" title="حسابي"><i class="bi bi-person-circle me-1"></i>@HttpContextAccessor.HttpContext.Session.GetString("UserName")</a>
+    </li>
+    <li class="nav-item">
+        <form class="form-inline" asp-area="" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+            <button type="submit" class="nav-link btn btn-link text-dark"><i class="bi bi-box-arrow-left me-1"></i>تسجيل الخروج</button>
+        </form>
+    </li>
+}
+else
+{
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Register"><i class="bi bi-person-plus me-1"></i>تسجيل جديد</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="Login"><i class="bi bi-box-arrow-in-right me-1"></i>تسجيل الدخول</a>
+    </li>
+}
+</ul>

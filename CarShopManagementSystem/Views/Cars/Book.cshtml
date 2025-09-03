@@ -1,0 +1,142 @@
+@model CarShopManagementSystem.Models.Car
+
+@{
+    ViewData["Title"] = "حجز السيارة";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h1 class="h3 mb-0">حجز السيارة</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/images/cars/default-car.jpg" : Model.ImageUrl)" class="img-fluid rounded" alt="@Model.Manufacturer?.Name @Model.Model">
+                </div>
+                <div class="col-md-8">
+                    <div class="d-flex align-items-center mb-3">
+                        <img src="@(Model.Manufacturer?.LogoPath != null ? "/" + Model.Manufacturer.LogoPath : "/logos/no-logo.png")" alt="Logo" style="height:50px; margin-right:10px;" />
+                        <h2 class="mb-0">@Model.Manufacturer?.Name @Model.Model @Model.Year</h2>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle-fill"></i> سيتم حجز هذه السيارة لمدة 24 ساعة من وقت التأكيد. خلال هذه الفترة، لن تكون السيارة متاحة للحجز من قبل مستخدمين آخرين.
+                    </div>
+
+                    <dl class="row">
+                        <dt class="col-sm-3">الشركة المصنعة</dt>
+                        <dd class="col-sm-9">@Model.Manufacturer?.Name</dd>
+
+                        <dt class="col-sm-3">الموديل</dt>
+                        <dd class="col-sm-9">@Model.Model</dd>
+
+                        <dt class="col-sm-3">سنة الصنع</dt>
+                        <dd class="col-sm-9">@Model.Year</dd>
+
+                        <dt class="col-sm-3">اللون</dt>
+                        <dd class="col-sm-9">@Model.Color</dd>
+
+                        <dt class="col-sm-3">السعر</dt>
+                        <dd class="col-sm-9">@Model.EstimatedPriceMax.ToString("C0")</dd>
+
+                        <dt class="col-sm-3">الحالة</dt>
+                        <dd class="col-sm-9">@(Model.IsUsed ? "مستعملة" : "جديدة")</dd>
+
+                        @if (Model.IsUsed && Model.Mileage.HasValue)
+                        {
+                            <dt class="col-sm-3">المسافة المقطوعة</dt>
+                            <dd class="col-sm-9">@Model.Mileage كم</dd>
+                        }
+                    </dl>
+
+                    <form asp-action="Book" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+
+                        @if (TempData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle-fill"></i> @TempData["ErrorMessage"]
+                            </div>
+                        }
+
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> العودة للقائمة</a>
+                            <button type="submit" class="btn btn-success"><i class="bi bi-calendar-check"></i> تأكيد الحجز</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* @model CarShopManagementSystem.Models.Car
+
+@{
+    ViewData["Title"] = "حجز السيارة";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h1 class="h3 mb-0">حجز السيارة</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "/images/cars/default-car.jpg" : Model.ImageUrl)" class="img-fluid rounded" alt="@Model.Manufacturer @Model.Model">
+                </div>
+                <div class="col-md-8">
+                    <h2>@Model.Manufacturer @Model.Model @Model.Year</h2>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle-fill"></i> سيتم حجز هذه السيارة لمدة 24 ساعة من وقت التأكيد. خلال هذه الفترة، لن تكون السيارة متاحة للحجز من قبل مستخدمين آخرين.
+                    </div>
+                    
+                    <dl class="row">
+                        <dt class="col-sm-3">الماركة</dt>
+                        <dd class="col-sm-9">@Model.Manufacturer</dd>
+                        
+                        <dt class="col-sm-3">الموديل</dt>
+                        <dd class="col-sm-9">@Model.Model</dd>
+                        
+                        <dt class="col-sm-3">سنة الصنع</dt>
+                        <dd class="col-sm-9">@Model.Year</dd>
+                        
+                        <dt class="col-sm-3">اللون</dt>
+                        <dd class="col-sm-9">@Model.Color</dd>
+                        
+                        <dt class="col-sm-3">السعر</dt>
+                        <dd class="col-sm-9">@Model.EstimatedPriceMax.ToString("C0")</dd>
+                        
+                        <dt class="col-sm-3">الحالة</dt>
+                        <dd class="col-sm-9">@(Model.IsUsed ? "مستعملة" : "جديدة")</dd>
+                        
+                        @if (Model.IsUsed && Model.Mileage.HasValue)
+                        {
+                            <dt class="col-sm-3">المسافة المقطوعة</dt>
+                            <dd class="col-sm-9">@Model.Mileage كم</dd>
+                        }
+                    </dl>
+                    
+                    <form asp-action="Book" method="post">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        
+                        @if (ViewData["ErrorMessage"] != null)
+                        {
+                            <div class="alert alert-danger">
+                                <i class="bi bi-exclamation-triangle-fill"></i> @ViewData["ErrorMessage"]
+                            </div>
+                        }
+                        
+                        <div class="d-flex justify-content-between mt-4">
+                            <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> العودة للقائمة</a>
+                            <button type="submit" class="btn btn-success"><i class="bi bi-calendar-check"></i> تأكيد الحجز</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> *@

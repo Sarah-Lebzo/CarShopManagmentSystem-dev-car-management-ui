@@ -1,0 +1,123 @@
+@model CarShopManagementSystem.Models.Booking
+
+@{
+    ViewData["Title"] = "تأكيد الحجز";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-success">
+        <div class="card-header bg-success text-white">
+            <h1 class="h3 mb-0">تم الحجز بنجاح</h1>
+        </div>
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <div class="display-1 text-success">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <h2>تم حجز السيارة بنجاح!</h2>
+                <p class="lead">تم حجز السيارة لمدة 24 ساعة من الآن</p>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h3 class="h5 mb-0">تفاصيل الحجز</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-flex align-items-center mb-3">
+                                <img src="@(Model.Car.Manufacturer?.LogoPath != null ? "/" + Model.Car.Manufacturer.LogoPath : "/logos/no-logo.png")" alt="Logo" style="height:50px; margin-right:10px;" />
+                                <h4 class="mb-0">@Model.Car.Manufacturer?.Name @Model.Car.SubBrand?.Name @Model.Car.Model @Model.Car.Year</h4>
+                            </div>
+
+                            <dl class="row">
+                                <dt class="col-sm-5">السيارة</dt>
+                                <dd class="col-sm-7">@Model.Car.Manufacturer?.Name @Model.Car.SubBrand?.Name @Model.Car.Model @Model.Car.Year</dd>
+
+                                <dt class="col-sm-5">تاريخ الحجز</dt>
+                                <dd class="col-sm-7">@Model.BookingDate.ToString("yyyy/MM/dd HH:mm")</dd>
+
+                                <dt class="col-sm-5">تاريخ انتهاء الحجز</dt>
+                                <dd class="col-sm-7">@Model.ExpiryDate.ToString("yyyy/MM/dd HH:mm")</dd>
+
+                                <dt class="col-sm-5">السعر</dt>
+                                <dd class="col-sm-7">@Model.Car.EstimatedPriceMax.ToString("C0")</dd>
+                            </dl>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle-fill"></i> يرجى التواصل مع المعرض خلال فترة الحجز لإتمام عملية الشراء. سيتم إلغاء الحجز تلقائياً بعد 24 ساعة.
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <form asp-action="CheckoutConfirmed" method="post" asp-route-id="@Model.Id" class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success"><i class="bi bi-credit-card"></i> إتمام عملية الشراء</button>
+                        </form>
+                        <a asp-action="Index" class="btn btn-primary"><i class="bi bi-car-front"></i> العودة لقائمة السيارات</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@* @model CarShopManagementSystem.Models.Booking
+
+@{
+    ViewData["Title"] = "تأكيد الحجز";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-success">
+        <div class="card-header bg-success text-white">
+            <h1 class="h3 mb-0">تم الحجز بنجاح</h1>
+        </div>
+        <div class="card-body">
+            <div class="text-center mb-4">
+                <div class="display-1 text-success">
+                    <i class="bi bi-check-circle"></i>
+                </div>
+                <h2>تم حجز السيارة بنجاح!</h2>
+                <p class="lead">تم حجز السيارة لمدة 24 ساعة من الآن</p>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-6 mx-auto">
+                    <div class="card mb-4">
+                        <div class="card-header bg-light">
+                            <h3 class="h5 mb-0">تفاصيل الحجز</h3>
+                        </div>
+                        <div class="card-body">
+                            <dl class="row">
+                                <dt class="col-sm-5">السيارة</dt>
+                                <dd class="col-sm-7">@Model.Car.Manufacturer @Model.Car.Model @Model.Car.Year</dd>
+                                
+                                <dt class="col-sm-5">تاريخ الحجز</dt>
+                                <dd class="col-sm-7">@Model.BookingDate.ToString("yyyy/MM/dd HH:mm")</dd>
+                                
+                                <dt class="col-sm-5">تاريخ انتهاء الحجز</dt>
+                                <dd class="col-sm-7">@Model.ExpiryDate.ToString("yyyy/MM/dd HH:mm")</dd>
+                                
+                                <dt class="col-sm-5">السعر</dt>
+                                <dd class="col-sm-7">@Model.Car.EstimatedPriceMax.ToString("C0")</dd>
+                            </dl>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle-fill"></i> يرجى التواصل مع المعرض خلال فترة الحجز لإتمام عملية الشراء. سيتم إلغاء الحجز تلقائياً بعد 24 ساعة.
+                    </div>
+                    
+                    <div class="d-grid gap-2">
+                        <form asp-action="CheckoutConfirmed" method="post" asp-route-id="@Model.Id" class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success"><i class="bi bi-credit-card"></i> إتمام عملية الشراء</button>
+                        </form>
+                        <a asp-action="Index" class="btn btn-primary"><i class="bi bi-car-front"></i> العودة لقائمة السيارات</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> *@

@@ -1,0 +1,42 @@
+@model CarShopManagementSystem.Models.User
+
+@{
+    ViewData["Title"] = "الملف الشخصي";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white">
+                    <h2>@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">الاسم الكامل:</div>
+                        <div class="col-md-8">@Model.FirstName @Model.LastName</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">البريد الإلكتروني:</div>
+                        <div class="col-md-8">@Model.Email</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">رقم الهاتف:</div>
+                        <div class="col-md-8">@Model.PhoneNumber</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">العنوان:</div>
+                        <div class="col-md-8">@Model.Address</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-4 fw-bold">تاريخ التسجيل:</div>
+                        <div class="col-md-8">@Model.RegisterDate.ToString("dd/MM/yyyy")</div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">العودة للرئيسية</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

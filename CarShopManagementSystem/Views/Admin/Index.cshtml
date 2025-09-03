@@ -1,0 +1,32 @@
+@model IEnumerable<CarShopManagementSystem.Models.User>
+@{
+    ViewData["Title"] = "إدارة الموظفين";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">قائمة الموظفين</h2>
+    <a asp-action="AddEmployee" class="btn btn-primary mb-3">إضافة موظف جديد</a>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>الاسم</th>
+                <th>البريد الإلكتروني</th>
+                <th>الهاتف</th>
+                <th>العنوان</th>
+                <th>تاريخ التسجيل</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var emp in Model)
+            {
+                <tr>
+                    <td>@emp.FirstName @emp.LastName</td>
+                    <td>@emp.Email</td>
+                    <td>@emp.PhoneNumber</td>
+                    <td>@emp.Address</td>
+                    <td>@emp.RegisterDate.ToShortDateString()</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,52 @@
+@model CarShopManagementSystem.Models.ViewModels.EmployeeReportViewModel
+@{
+    ViewData["Title"] = "تقارير المبيعات";
+}
+
+<div class="container mt-5">
+    <h2 class="mb-4">تقارير المبيعات</h2>
+
+    <div class="row mb-4">
+        <div class="col-md-4">
+            <div class="card text-white bg-success mb-3 shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">إجمالي السيارات المباعة</h5>
+                    <p class="display-6 fw-bold">@Model.TotalCarsSold</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-white bg-info mb-3 shadow">
+                <div class="card-body text-center">
+                    <h5 class="card-title">إجمالي الإيرادات</h5>
+                    <p class="display-6 fw-bold">@Model.TotalRevenue.ToString("C0")</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h4 class="mb-3">تفاصيل العمليات</h4>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>المستخدم</th>
+                <th>السيارة</th>
+                <th>السعر</th>
+                <th>التاريخ</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var t in Model.Transactions)
+            {
+                <tr>
+                    <td>@t.Id</td>
+                    <td>@t.User.FirstName @t.User.LastName</td>
+                    <td>@t.Car.Manufacturer @t.Car.Model (@t.Car.Year)</td>
+                    <td>@t.SalePrice.ToString("C0")</td>
+                    <td>@t.TransactionDate.ToString("yyyy/MM/dd HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

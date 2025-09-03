@@ -1,0 +1,173 @@
+@model CarShopManagementSystem.Models.ViewModels.PaymentViewModel
+
+@{
+    ViewData["Title"] = "الدفع";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <!-- بطاقة معلومات الحجز -->
+            <div class="card mb-4 shadow-sm border-primary">
+                <div class="card-header bg-primary text-white d-flex align-items-center">
+                    <img src="@(Model.Booking.Car.Manufacturer?.LogoPath != null ? "/" + Model.Booking.Car.Manufacturer.LogoPath : "/logos/no-logo.png")" alt="Logo" style="height:40px; margin-right:10px;">
+                    <h5 class="mb-0">بيانات الحجز</h5>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">@Model.Booking.Car.Manufacturer?.Name @Model.Booking.Car.Model (@Model.Booking.Car.Year)</h5>
+                    <p class="card-text">السعر: <strong>@Model.Booking.Car.EstimatedPriceMax.ToString("C")</strong></p>
+                    <p class="card-text">تاريخ الحجز: @Model.Booking.BookingDate.ToString("yyyy/MM/dd HH:mm")</p>
+                    @if (Model.Booking.Car.SubBrand != null)
+                    {
+                        <p class="card-text">السب براند: @Model.Booking.Car.SubBrand.Name</p>
+                    }
+                </div>
+            </div>
+
+            <!-- رسالة خطأ -->
+            @if (!string.IsNullOrEmpty(Model.Message))
+            {
+                <div class="alert alert-danger">@Model.Message</div>
+            }
+
+            <!-- نموذج الدفع -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">إتمام عملية الدفع</h5>
+                </div>
+                <div class="card-body">
+                    <form asp-action="Index" method="post" class="needs-validation" novalidate>
+                        <input type="hidden" name="bookingId" value="@Model.Booking.Id" />
+
+                        <!-- معلومات الشحن -->
+                        <h6 class="mb-3">معلومات الشحن</h6>
+                        <div class="mb-3">
+                            <label for="shippingCountry" class="form-label">الدولة</label>
+                            <input type="text" class="form-control" id="shippingCountry" name="shippingCountry" required />
+                        </div>
+                        <div class="mb-3">
+                            <label for="shippingMethod" class="form-label">طريقة الشحن</label>
+                            <select class="form-select" id="shippingMethod" name="shippingMethod" required>
+                                <option value="">اختر طريقة الشحن</option>
+                                <option value="بحري">بحري</option>
+                                <option value="جوي">جوي</option>
+                                <option value="بري">بري</option>
+                            </select>
+                        </div>
+
+                        <hr />
+
+                        <!-- معلومات البطاقة -->
+                        <h6 class="mb-3">معلومات البطاقة</h6>
+                        <div class="mb-3">
+                            <label for="cardNumber" class="form-label">رقم البطاقة</label>
+                            <input type="text" class="form-control" id="cardNumber" name="cardNumber" required minlength="12" maxlength="19" placeholder="xxxx xxxx xxxx xxxx" />
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label for="expiryMonth" class="form-label">شهر الانتهاء</label>
+                                <input type="number" class="form-control" id="expiryMonth" name="expiryMonth" min="1" max="12" required />
+                            </div>
+                            <div class="col">
+                                <label for="expiryYear" class="form-label">سنة الانتهاء</label>
+                                <input type="number" class="form-control" id="expiryYear" name="expiryYear" min="2024" max="2100" required />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cvv" class="form-label">CVV</label>
+                            <input type="text" class="form-control" id="cvv" name="cvv" required minlength="3" maxlength="4" placeholder="123" />
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-success btn-lg"><i class="bi bi-credit-card"></i> إتمام الشراء</button>
+                            <a asp-controller="Cars" asp-action="Index" class="btn btn-outline-secondary btn-lg"><i class="bi bi-arrow-left"></i> العودة لقائمة السيارات</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Bootstrap form validation
+        (() => {
+            'use strict'
+            const forms = document.querySelectorAll('.needs-validation')
+            Array.from(forms).forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) {
+                        event.preventDefault()
+                        event.stopPropagation()
+                    }
+                    form.classList.add('was-validated')
+                }, false)
+            })
+        })()
+    </script>
+}
+
+
+@* @model CarShopManagementSystem.Models.ViewModels.PaymentViewModel
+
+@{
+    ViewData["Title"] = "الدفع";
+}
+
+<h2>بيانات الحجز</h2>
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Booking.Car.Manufacturer @Model.Booking.Car.Model (@Model.Booking.Car.Year)</h5>
+        <p class="card-text">السعر: @Model.Booking.Car.EstimatedPriceMax.ToString("C")</p>
+        <p class="card-text">تاريخ الحجز: @Model.Booking.BookingDate</p>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.Message))
+{
+    <div class="alert alert-danger">@Model.Message</div>
+}
+
+<form asp-action="Index" method="post">
+    <input type="hidden" name="bookingId" value="@Model.Booking.Id" />
+
+    <h3>معلومات الشحن</h3>
+    <div class="mb-3">
+        <label for="shippingCountry" class="form-label">الدولة</label>
+        <input type="text" class="form-control" id="shippingCountry" name="shippingCountry" required />
+    </div>
+    <div class="mb-3">
+        <label for="shippingMethod" class="form-label">طريقة الشحن</label>
+        <select class="form-select" id="shippingMethod" name="shippingMethod" required>
+            <option value="">اختر طريقة الشحن</option>
+            <option value="بحري">بحري</option>
+            <option value="جوي">جوي</option>
+            <option value="بري">بري</option>
+        </select>
+    </div>
+
+    <h3>معلومات البطاقة</h3>
+    <div class="mb-3">
+        <label for="cardNumber" class="form-label">رقم البطاقة</label>
+        <input type="text" class="form-control" id="cardNumber" name="cardNumber" required minlength="12" maxlength="19" />
+    </div>
+    <div class="row mb-3">
+        <div class="col">
+            <label for="expiryMonth" class="form-label">شهر الانتهاء</label>
+            <input type="number" class="form-control" id="expiryMonth" name="expiryMonth" min="1" max="12" required />
+        </div>
+        <div class="col">
+            <label for="expiryYear" class="form-label">سنة الانتهاء</label>
+            <input type="number" class="form-control" id="expiryYear" name="expiryYear" min="2024" max="2100" required />
+        </div>
+    </div>
+    <div class="mb-3">
+        <label for="cvv" class="form-label">CVV</label>
+        <input type="text" class="form-control" id="cvv" name="cvv" required minlength="3" maxlength="4" />
+    </div>
+    <button type="submit" class="btn btn-primary">إتمام الشراء</button>
+</form>
+
+<a asp-controller="Cars" asp-action="Index" class="btn btn-link mt-3">العودة إلى قائمة السيارات</a> *@

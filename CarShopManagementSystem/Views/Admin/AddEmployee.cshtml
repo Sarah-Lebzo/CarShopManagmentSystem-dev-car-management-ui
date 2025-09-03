@@ -1,0 +1,29 @@
+@model CarShopManagementSystem.Models.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "إضافة موظف جديد";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow">
+                <div class="card-header bg-primary text-white text-center">
+                    <h2>@ViewData["Title"]</h2>
+                </div>
+                <div class="card-body">
+                    <form asp-action="AddEmployee" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <partial name="../Account/Register" />
+                        <div class="form-group d-grid gap-2 mt-3">
+                            <button type="submit" class="btn btn-success">حفظ الموظف</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

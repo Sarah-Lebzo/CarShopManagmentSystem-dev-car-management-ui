@@ -1,0 +1,19 @@
+<svg width="800" height="500" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f8f9fa;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e9ecef;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#grad)" />
+  <text x="50%" y="30%" font-family="Arial" font-size="30" fill="#6c757d" text-anchor="middle">صورة السيارة غير متوفرة</text>
+  <g transform="translate(400, 300)">
+    <path d="M-150,-50 L150,-50 L200,0 L-200,0 Z" fill="#adb5bd" />
+    <rect x="-200" y="0" width="400" height="50" fill="#6c757d" />
+    <circle cx="-120" cy="50" r="40" fill="#343a40" stroke="#495057" stroke-width="5" />
+    <circle cx="120" cy="50" r="40" fill="#343a40" stroke="#495057" stroke-width="5" />
+    <rect x="-130" y="-40" width="260" height="30" fill="#ced4da" />
+    <rect x="-100" y="-30" width="200" height="20" fill="#dee2e6" />
+    <path d="M-150,-50 L-130,-80 L130,-80 L150,-50 Z" fill="#6c757d" />
+  </g>
+</svg>

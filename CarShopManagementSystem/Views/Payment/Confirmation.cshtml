@@ -1,0 +1,53 @@
+@model CarShopManagementSystem.Models.Transaction
+@{
+    ViewData["Title"] = "تأكيد الشراء";
+}
+
+<div class="container mt-4">
+    <div class="alert alert-success shadow-sm">
+        <h3>تمت العملية بنجاح</h3>
+        <p>@ViewBag.Message</p>
+    </div>
+
+    <div class="card mb-4 shadow-sm border-primary">
+        <div class="card-header bg-primary text-white d-flex align-items-center">
+            <img src="@(Model.Car.Manufacturer?.LogoPath != null ? "/" + Model.Car.Manufacturer.LogoPath : "/logos/no-logo.png")"
+                 alt="Logo" style="height:40px; margin-right:10px;">
+            <h5 class="mb-0">@Model.Car.Manufacturer?.Name @Model.Car.Model (@Model.Car.Year)</h5>
+        </div>
+        <div class="card-body">
+            <p class="card-text"><strong>السعر:</strong> @Model.SalePrice.ToString("C")</p>
+            <p class="card-text"><strong>تاريخ العملية:</strong> @Model.TransactionDate.ToString("yyyy/MM/dd HH:mm")</p>
+            @if (Model.Car.SubBrand != null)
+            {
+                <p class="card-text"><strong>السب براند:</strong> @Model.Car.SubBrand.Name</p>
+            }
+        </div>
+    </div>
+
+    <a asp-controller="Cars" asp-action="Index" class="btn btn-primary">
+        <i class="bi bi-car-front"></i> العودة إلى السيارات
+    </a>
+</div>
+
+
+@* @model CarShopManagementSystem.Models.Transaction
+@{
+    ViewData["Title"] = "تأكيد الشراء";
+}
+
+<div class="alert alert-success">
+    <h3>تمت العملية بنجاح</h3>
+    <p>@ViewBag.Message</p>
+</div>
+
+<h4>تفاصيل السيارة</h4>
+<div class="card mb-3">
+    <div class="card-body">
+        <h5 class="card-title">@Model.Car.Manufacturer @Model.Car.Model (@Model.Car.Year)</h5>
+        <p class="card-text">السعر: @Model.SalePrice.ToString("C")</p>
+        <p class="card-text">تاريخ العملية: @Model.TransactionDate</p>
+    </div>
+</div>
+
+<a asp-controller="Cars" asp-action="Index" class="btn btn-primary">العودة إلى السيارات</a> *@

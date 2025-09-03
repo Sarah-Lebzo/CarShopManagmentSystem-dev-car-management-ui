@@ -1,0 +1,279 @@
+@model CarShopManagementSystem.Models.Car
+
+@{
+    ViewData["Title"] = "تعديل السيارة";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-light d-flex align-items-center">
+            <img src="@(Model.Manufacturer?.LogoPath != null ? "/" + Model.Manufacturer.LogoPath : "/logos/no-logo.png")" alt="Logo" style="height:50px; margin-right:10px;" />
+            <h1 class="h3 mb-0">@ViewData["Title"] - @Model.Manufacturer?.Name @Model.Model</h1>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" enctype="multipart/form-data" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="ImageUrl" />
+                <input type="hidden" asp-for="IsAvailable" />
+
+                <div class="row">
+                    <!-- العمود الأول -->
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="ManufacturerId" class="form-label">الشركة المصنعة</label>
+                            <select asp-for="ManufacturerId" class="form-select" asp-items="@(new SelectList(ViewData["Brands"] as List<CarShopManagementSystem.Models.Manufacturer>, "Id", "Name", Model.ManufacturerId))" id="manufacturerSelect">
+                                <option value="">اختر الشركة</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SubBrandId" class="form-label">SubBrand</label>
+                            <select asp-for="SubBrandId" class="form-select" id="subBrandSelect">
+                                <option value="">اختر SubBrand</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Model" class="form-label">الموديل</label>
+                            <input asp-for="Model" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Year" class="form-label">سنة الصنع</label>
+                            <input asp-for="Year" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Color" class="form-label">اللون</label>
+                            <input asp-for="Color" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Costing" class="form-label">تكلفة السيارة</label>
+                            <input asp-for="Costing" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="SellingPrice" class="form-label">السعر النهائي للبيع</label>
+                            <input asp-for="SellingPrice" class="form-control" />
+                        </div>
+                    </div>
+
+                    <!-- العمود الثاني -->
+                    <div class="col-md-6">
+                        <div class="form-check mb-3">
+                            <input asp-for="IsUsed" class="form-check-input" id="isUsedCheck" />
+                            <label asp-for="IsUsed" class="form-check-label">سيارة مستعملة</label>
+                        </div>
+
+                        <div class="mb-3" id="mileageDiv">
+                            <label asp-for="Mileage" class="form-label">المسافة المقطوعة</label>
+                            <input asp-for="Mileage" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EstimatedPriceMin" class="form-label">السعر التقديري (الحد الأدنى)</label>
+                            <input asp-for="EstimatedPriceMin" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="EstimatedPriceMax" class="form-label">السعر التقديري (الحد الأعلى)</label>
+                            <input asp-for="EstimatedPriceMax" class="form-control" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ImageUrl" class="form-label">صورة السيارة</label>
+                            <input type="file" name="ImageFile" class="form-control" />
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <img src="@Model.ImageUrl" class="img-thumbnail mt-2" style="height:150px;" />
+                            }
+                        </div>
+                    </div>
+
+                    <!-- العمود الثالث: الوصف -->
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">الوصف</label>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> العودة للقائمة</a>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> حفظ التغييرات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+
+    <script>
+        $(document).ready(function () {
+            // إظهار أو إخفاء حقل المسافة المقطوعة
+            function toggleMileageField() {
+                if ($("#isUsedCheck").is(":checked")) {
+                    $("#mileageDiv").show();
+                } else {
+                    $("#mileageDiv").hide();
+                    $("#Mileage").val("");
+                }
+            }
+            toggleMileageField();
+            $("#isUsedCheck").change(toggleMileageField);
+
+            // تحميل SubBrands عند تغيير Manufacturer
+            $("#manufacturerSelect").change(function () {
+                var manufacturerId = $(this).val();
+                $("#subBrandSelect").empty();
+                if (manufacturerId) {
+                    $.getJSON('/Cars/GetSubBrands', { manufacturerId: manufacturerId }, function (data) {
+                        $("#subBrandSelect").append('<option value="">اختر SubBrand</option>');
+                        $.each(data, function (i, item) {
+                            $("#subBrandSelect").append('<option value="' + item.id + '">' + item.name + '</option>');
+                        });
+                        // تحديد SubBrand الحالي إذا موجود
+                        var selectedSubBrand = '@Model.SubBrandId';
+                        if (selectedSubBrand) {
+                            $("#subBrandSelect").val(selectedSubBrand);
+                        }
+                    });
+                }
+            }).trigger("change"); // لتفعيل SubBrand الحالي عند التحميل
+        });
+    </script>
+}
+
+
+
+@* @model CarShopManagementSystem.Models.Car
+
+@{
+    ViewData["Title"] = "تعديل السيارة";
+}
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-light">
+            <h1 class="h3 mb-0">@ViewData["Title"] - @Model.Make @Model.Model</h1>
+        </div>
+        <div class="card-body">
+            <form asp-action="Edit" enctype="multipart/form-data" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="ImageUrl" />
+                <input type="hidden" asp-for="IsAvailable" />
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Make" class="form-label">الماركة</label>
+                            <input asp-for="Make" class="form-control" />
+                            <span asp-validation-for="Make" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Model" class="form-label">الموديل</label>
+                            <input asp-for="Model" class="form-control" />
+                            <span asp-validation-for="Model" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Year" class="form-label">سنة الصنع</label>
+                            <input asp-for="Year" class="form-control" type="number" min="1900" max="@DateTime.Now.Year" />
+                            <span asp-validation-for="Year" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="Color" class="form-label">اللون</label>
+                            <input asp-for="Color" class="form-control" />
+                            <span asp-validation-for="Color" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="mb-3">
+                            <label asp-for="Price" class="form-label">السعر</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input asp-for="Price" class="form-control" type="number" min="0" step="0.01" />
+                            </div>
+                            <span asp-validation-for="Price" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="IsUsed" class="form-label">حالة السيارة</label>
+                            <div class="form-check">
+                                <input asp-for="IsUsed" class="form-check-input" type="checkbox" id="isUsedCheck" />
+                                <label class="form-check-label" for="isUsedCheck">سيارة مستعملة</label>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3" id="mileageDiv">
+                            <label asp-for="Mileage" class="form-label">المسافة المقطوعة (كم)</label>
+                            <input asp-for="Mileage" class="form-control" type="number" min="0" />
+                            <span asp-validation-for="Mileage" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="ImageFile" class="form-label">صورة السيارة</label>
+                            <input type="file" name="ImageFile" id="ImageFile" class="form-control" accept="image/*" />
+                            @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                            {
+                                <div class="mt-2">
+                                    <img src="@Model.ImageUrl" alt="@Model.Make @Model.Model" class="img-thumbnail" style="max-height: 100px" />
+                                    <div class="form-text">الصورة الحالية</div>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    
+                    <div class="col-12">
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label">الوصف</label>
+                            <textarea asp-for="Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="d-flex justify-content-between mt-4">
+                    <a asp-action="Index" class="btn btn-outline-secondary"><i class="bi bi-arrow-left"></i> العودة للقائمة</a>
+                    <button type="submit" class="btn btn-primary"><i class="bi bi-save"></i> حفظ التغييرات</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    
+    <script>
+        $(document).ready(function() {
+            // Show/hide mileage field based on IsUsed checkbox
+            function toggleMileageField() {
+                if ($("#isUsedCheck").is(":checked")) {
+                    $("#mileageDiv").show();
+                } else {
+                    $("#mileageDiv").hide();
+                    $("#Mileage").val("");
+                }
+            }
+            
+            // Initial state
+            toggleMileageField();
+            
+            // On change
+            $("#isUsedCheck").change(toggleMileageField);
+        });
+    </script>
+} *@

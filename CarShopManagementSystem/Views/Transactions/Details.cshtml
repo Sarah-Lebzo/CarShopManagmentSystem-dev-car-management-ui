@@ -1,0 +1,39 @@
+@model CarShopManagementSystem.Models.Transaction
+
+@{
+    ViewData["Title"] = "تفاصيل العملية";
+}
+
+<div class="container mt-4">
+    <div class="card shadow border-primary">
+        <div class="card-header bg-primary text-white">
+            <h1 class="h4 mb-0">تفاصيل عملية الشراء</h1>
+        </div>
+        <div class="card-body">
+            <dl class="row">
+                <dt class="col-sm-4">رقم العملية</dt>
+                <dd class="col-sm-8">@Model.Id</dd>
+
+                <dt class="col-sm-4">المستخدم</dt>
+                <dd class="col-sm-8">@Model.User.FirstName @Model.User.LastName (@Model.User.Email)</dd>
+
+                <dt class="col-sm-4">السيارة</dt>
+                <dd class="col-sm-8">@Model.Car.Manufacturer @Model.Car.Model @Model.Car.Year</dd>
+
+                <dt class="col-sm-4">السعر</dt>
+                <dd class="col-sm-8">@Model.SalePrice.ToString("C0")</dd>
+
+                <dt class="col-sm-4">تاريخ العملية</dt>
+                <dd class="col-sm-8">@Model.TransactionDate.ToString("yyyy/MM/dd HH:mm")</dd>
+
+                @if(!string.IsNullOrEmpty(Model.Notes))
+                {
+                    <dt class="col-sm-4">ملاحظات</dt>
+                    <dd class="col-sm-8">@Model.Notes</dd>
+                }
+            </dl>
+
+            <a asp-action="Index" asp-controller="Cars" class="btn btn-secondary"><i class="bi bi-arrow-left"></i> العودة</a>
+        </div>
+    </div>
+</div>
